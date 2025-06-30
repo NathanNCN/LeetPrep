@@ -83,7 +83,8 @@ function Userinputs() {
                                     onChange={updateChecks}
                                     className="sr-only"
                                 />
-                                <div className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                                <div className={`p-4 rounded-xl border-2 transition-all duration-200 hover:bg-gradient-to-r ${option.color}
+                                ${
                                     checks.diff === option.value 
                                         ? `bg-gradient-to-r ${option.color} border-transparent text-white shadow-lg` 
                                         : 'bg-white/5 border-gray-600 text-gray-300 hover:border-[#00A8CC]'
@@ -115,7 +116,8 @@ function Userinputs() {
                                     onChange={updateChecks}
                                     className="sr-only"
                                 />
-                                <div className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                                <div className={`p-4 rounded-xl border-2 transition-all duration-200 hover:bg-gradient-to-r ${option.color}
+                                ${
                                     checks.length === option.value 
                                         ? `bg-gradient-to-r ${option.color} border-transparent text-white shadow-lg` 
                                         : 'bg-white/5 border-gray-600 text-gray-300 hover:border-[#00A8CC]'

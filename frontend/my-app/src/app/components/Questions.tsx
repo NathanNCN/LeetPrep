@@ -4,9 +4,13 @@ import { FaChevronDown, FaChevronUp, FaClock, FaStar, FaExternalLinkAlt } from "
 
 interface AccordionProps {
   title: string;
+  answer?: string;
+  feedback?: string;
+  score?: number;
+  resources?: string;
 }
 
-function Question(props: any) {
+function Question(props: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -29,54 +33,50 @@ function Question(props: any) {
               <div className="text-[#00A8CC]">
                 <FaStar size={16} />
               </div>
-              Answer
+              Your Answer
             </h4>
-            <p className="text-gray-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos</p>
+            <p className="text-gray-300 whitespace-pre-wrap">{props.answer || "No answer provided"}</p>
           </div>
           
-          <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
-            <h4 className="text-white font-semibold mb-2">Feedback</h4>
-            <p className="text-gray-300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos</p>
-          </div>
+          {props.feedback && (
+            <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
+              <h4 className="text-white font-semibold mb-2">Feedback</h4>
+              <p className="text-gray-300 whitespace-pre-wrap">{props.feedback}</p>
+            </div>
+          )}
           
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
-              <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                <div className="text-[#00A8CC]">
-                  <FaStar size={16} />
-                </div>
-                Score
-              </h4>
-              <p className="text-[#00A8CC] font-bold text-xl">10/10</p>
-            </div>
+            {props.score !== undefined && (
+              <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
+                <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
+                  <div className="text-[#00A8CC]">
+                    <FaStar size={16} />
+                  </div>
+                  Score
+                </h4>
+                <p className="text-[#00A8CC] font-bold text-xl">{props.score}/10</p>
+              </div>
+            )}
             
             <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
               <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
                 <div className="text-[#00A8CC]">
-                  <FaClock size={16} />
+                  <FaExternalLinkAlt size={16} />
                 </div>
-                Time
+                Resources
               </h4>
-              <p className="text-gray-300">10 seconds</p>
+              <a 
+                href={props.resources} 
+                className="text-[#00A8CC] hover:text-[#00C4E0] underline transition-colors duration-200"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Learn More About This Topic
+              </a>
             </div>
           </div>
           
-          <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
-            <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-              <div className="text-[#00A8CC]">
-                <FaExternalLinkAlt size={16} />
-              </div>
-              Resources
-            </h4>
-            <a 
-              href="https://www.google.com" 
-              className="text-[#00A8CC] hover:text-[#00C4E0] underline transition-colors duration-200"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn More About This Topic
-            </a>
-          </div>
+        
         </div>
       )}
     </div>

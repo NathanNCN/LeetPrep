@@ -14,8 +14,7 @@ export default function Home() {
           </h1>
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-gray-700 shadow-lg">
             <p className="text-gray-200 text-xl md:text-2xl leading-relaxed max-w-4xl mx-auto">
-              LeetPrep bridges the gap between you and interviews by offering
-              an interactive platform. Powered by AI, it delivers
+              LeetPrep bridges the gap between you and interviews. LeetPrep is powered by AI, it delivers
               personalized coding, technical, and behavioral questions tailored to your preferred 
               languages and difficulty level. Whether you're aiming for junior roles or FAANG-level 
               challenges. After each session, LeetPrep provides smart feedback and targeted resources 
@@ -51,7 +50,7 @@ export default function Home() {
       </div>
 
       {/* Form Section */}
-      <div className="w-full max-w-4xl mx-auto">
+      <div className="w-full max-w-4xl mx-auto mb-20">
         <Userinputs />
       </div>
     </div>
