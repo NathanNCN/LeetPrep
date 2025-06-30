@@ -18,13 +18,13 @@ function InterviewPage() {
 
 
     const [questions, setQuestions] = useState<string[]>([]);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<boolean>(false);
 
-    const [codeQuestion, setCodeQuestion] = useState(false);
-    const [isListening, setIsListening] = useState(false);
-    const [transcript, setTranscript] = useState("");
+    const [codeQuestion, setCodeQuestion] = useState<boolean>(false);
+    const [isListening, setIsListening] = useState<boolean>(false);
+    const [transcript, setTranscript] = useState<string>("");
     
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
    
@@ -117,9 +117,7 @@ function InterviewPage() {
 
     const router = useRouter()
 
-    const getResults = () => {
-        router.push("/Results")
-    }
+    
 
     const addAnswer = () => {
         if (codeQuestion) {
@@ -136,7 +134,7 @@ function InterviewPage() {
         // Stop any ongoing recognition to ensure clean state
         try {
             recognitionRef.current.stop();
-        } catch (error) {
+        } catch {
             // Recognition might not be running, that's okay
             console.log('Recognition cleanup - no active session to stop');
         }
