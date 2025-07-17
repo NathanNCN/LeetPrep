@@ -3,9 +3,21 @@ import Questions from "../components/Questions";
 import Rating from "../components/Rating";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaHome, FaTrophy, FaChartBar } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
-export default function ResultsPage() {
+function LoadingFallback() {
+    return (
+        <div className="flex flex-col items-center text-center min-h-screen px-8 bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#0f0f0f] font-sans">
+            <div className="w-full max-w-6xl mx-auto mt-16">
+                <div className="text-center my-12">
+                    <div className="text-white text-xl">Loading results...</div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ResultsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     
@@ -184,5 +196,13 @@ export default function ResultsPage() {
                 )}
             </div>
         </div>
-    )
+    );
+}
+
+export default function ResultsPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <ResultsContent />
+        </Suspense>
+    );
 }
