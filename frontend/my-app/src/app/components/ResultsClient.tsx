@@ -5,6 +5,8 @@ import { FaHome, FaTrophy, FaChartBar } from "react-icons/fa";
 import Questions from "./Questions";
 import Rating from "./Rating";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8081';
+
 export default function ResultsClient() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -41,7 +43,7 @@ export default function ResultsClient() {
             const requestBody = { questions, answers };
             console.log('Request body:', requestBody);
             
-            const response = await fetch(`http://localhost:8081/getResults`, {
+            const response = await fetch(`${BACKEND_URL}/getResults`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

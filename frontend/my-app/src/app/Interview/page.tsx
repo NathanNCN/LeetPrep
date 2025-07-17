@@ -8,6 +8,8 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from "next/navigation";
 import { FaHome, FaClock, FaMicrophone } from "react-icons/fa";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8081';
+
 function LoadingFallback() {
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#0f0f0f] items-center p-6 font-sans">
@@ -103,7 +105,7 @@ function InterviewContent() {
             if (questions.length === 0) {
                 try {
                     setLoading(true);
-                    const response = await fetch(`http://localhost:8081/getInterview`, {
+                    const response = await fetch(`${BACKEND_URL}/getInterview`, {
                         method: 'POST',
                         body: JSON.stringify({length: length, level: difficulty, language: selectedLangs}),
                     }); 
