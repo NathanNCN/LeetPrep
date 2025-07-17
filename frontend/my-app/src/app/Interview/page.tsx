@@ -107,14 +107,30 @@ function InterviewContent() {
                     setLoading(true);
                     const response = await fetch(`${BACKEND_URL}/getInterview`, {
                         method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify({length: length, level: difficulty, language: selectedLangs}),
                     }); 
                     const data = await response.json();
 
                     if (data.results) {
-                        const parsed = JSON.parse(data.results);
-                        setQuestions(parsed);
-                        console.log(parsed);
+                        try {
+                            const parsed = JSON.parse(data.results);
+                            console.log("Received questions:", parsed);
+                            
+                            // Validate the questions array structure
+                            if (!Array.isArray(parsed) || !parsed.every(q => Array.isArray(q) && q.length >= 2)) {
+                                console.error("Invalid question format received:", parsed);
+                                setError(true);
+                                return;
+                            }
+                            
+                            setQuestions(parsed);
+                        } catch (parseError) {
+                            console.error("Error parsing questions:", parseError);
+                            setError(true);
+                        }
                     } else {
                         setError(true);
                     }
@@ -196,18 +212,30 @@ function InterviewContent() {
             finalAnswers.push(transcript);
         }
         
-        // Extract just the question strings from the 2D array
-        const questionStrings = questions.map(questionArr => questionArr[1]);
+        // Log the raw questions array to see its structure
+        console.log("Raw questions array:", questions);
         
-        // Log the data being sent
-        console.log("Submitting data:", {
-            questions: questionStrings,
-            answers: finalAnswers
+        // Extract just the question strings from the 2D array
+        const questionStrings = questions.map((questionArr, index) => {
+            console.log(`Question ${index}:`, questionArr);
+            if (!Array.isArray(questionArr) || questionArr.length < 2) {
+                console.error(`Invalid question format at index ${index}:`, questionArr);
+                return "Error: Invalid question format";
+            }
+            return questionArr[1];
         });
+        
+        // Log the extracted questions
+        console.log("Extracted questions:", questionStrings);
         
         // Navigate to Results page with data as URL parameters
         const questionsParam = encodeURIComponent(JSON.stringify(questionStrings));
         const answersParam = encodeURIComponent(JSON.stringify(finalAnswers));
+        
+        console.log("Final data being sent:", {
+            questions: JSON.parse(decodeURIComponent(questionsParam)),
+            answers: JSON.parse(decodeURIComponent(answersParam))
+        });
         
         router.push(`/Results?questions=${questionsParam}&answers=${answersParam}`);
     }
@@ -265,7 +293,7 @@ function InterviewContent() {
                 )}
 
                 {/* Question Display */}
-                {!loading && !error && questions.length > 0 && questions[currentQuestion] && (
+                {!loading && !error && questions.length > 0 && questions[currentQuestion] && Array.isArray(questions[currentQuestion]) && (
                     <div className="flex flex-col md:flex-row gap-4 text-gray-300 text-lg">
                         <p><span className="font-semibold text-white">Interviewer:</span> {questions[currentQuestion][1]}</p>
                     </div>
