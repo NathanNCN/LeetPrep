@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-python";
@@ -14,7 +14,7 @@ function InterviewPage() {
     
     const difficulty = searchParams.get('diff');
     const length = searchParams.get('length');
-    const selectedLangs = searchParams.get('langs')?.split(',') || [];
+    const selectedLangs = useMemo(() => searchParams.get('langs')?.split(',') || [], [searchParams]);
 
 
     const [questions, setQuestions] = useState<string[]>([]);
@@ -27,7 +27,6 @@ function InterviewPage() {
     const [transcript, setTranscript] = useState<string>("");
     
     interface ISpeechRecognition {
-        new(): ISpeechRecognition;
         lang: string;
         continuous: boolean;
         onresult: (event: { results: { transcript: string }[][] }) => void;
@@ -37,35 +36,41 @@ function InterviewPage() {
         stop: () => void;
     }
 
-    interface IWindow extends Window {
-        SpeechRecognition?: ISpeechRecognition;
-        webkitSpeechRecognition?: ISpeechRecognition;
+    interface ISpeechRecognitionConstructor {
+        new(): ISpeechRecognition;
     }
 
-    const SpeechRecognition = ((window as IWindow).SpeechRecognition || (window as IWindow).webkitSpeechRecognition)!;
-   
-    const recognitionRef = useRef<typeof SpeechRecognition | null>(null);
+    interface IWindow extends Window {
+        SpeechRecognition?: ISpeechRecognitionConstructor;
+        webkitSpeechRecognition?: ISpeechRecognitionConstructor;
+    }
+
+    const SpeechRecognitionAPI = ((window as IWindow).SpeechRecognition || (window as IWindow).webkitSpeechRecognition)!;
+    
+    const recognitionRef = useRef<ISpeechRecognition | null>(null);
     
     // Initialize recognition only once
     if (!recognitionRef.current) {
-        recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.lang = "en-US";
-        recognitionRef.current.continuous = true;
-        
-        recognitionRef.current.onresult = (event: { results: { transcript: string }[][] }) => {
-            const result = event.results[0][0].transcript;
-            setTranscript(result);
-            setIsListening(false);
-        };
+        recognitionRef.current = new SpeechRecognitionAPI();
+        if (recognitionRef.current) {
+            recognitionRef.current.lang = "en-US";
+            recognitionRef.current.continuous = true;
+            
+            recognitionRef.current.onresult = (event: { results: { transcript: string }[][] }) => {
+                const result = event.results[0][0].transcript;
+                setTranscript(result);
+                setIsListening(false);
+            };
 
-        recognitionRef.current.onerror = (event: { error: string }) => {
-            console.error('Speech recognition error:', event.error);
-            setIsListening(false);
-        };
+            recognitionRef.current.onerror = (event: { error: string }) => {
+                console.error('Speech recognition error:', event.error);
+                setIsListening(false);
+            };
 
-        recognitionRef.current.onend = () => {
-            setIsListening(false);
-        };
+            recognitionRef.current.onend = () => {
+                setIsListening(false);
+            };
+        }
     }
     
     const [answer, setAnswer] = useState<string[]>([]);
