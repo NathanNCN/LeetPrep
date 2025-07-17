@@ -25,6 +25,17 @@ export default function ResultsClient() {
                 const decodedQuestions = JSON.parse(decodeURIComponent(questionsParam));
                 const decodedAnswers = JSON.parse(decodeURIComponent(answersParam));
                 
+                // Validate the data
+                if (!Array.isArray(decodedQuestions) || !Array.isArray(decodedAnswers)) {
+                    throw new Error('Invalid data format');
+                }
+
+                // Log the decoded data
+                console.log("Decoded data:", {
+                    questions: decodedQuestions,
+                    answers: decodedAnswers
+                });
+                
                 // Call API to get results
                 fetchResults(decodedQuestions, decodedAnswers);
             } catch (err) {
@@ -43,6 +54,11 @@ export default function ResultsClient() {
             const requestBody = { questions, answers };
             console.log('Request body:', requestBody);
             
+            // Validate the data before sending
+            if (!questions.every(q => typeof q === 'string') || !answers.every(a => typeof a === 'string')) {
+                throw new Error('Invalid data types in questions or answers');
+            }
+            
             const response = await fetch(`${BACKEND_URL}/getResults`, {
                 method: 'POST',
                 headers: {
@@ -50,6 +66,10 @@ export default function ResultsClient() {
                 },
                 body: JSON.stringify(requestBody),
             });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const data = await response.json();
             console.log('Raw response:', data.results);

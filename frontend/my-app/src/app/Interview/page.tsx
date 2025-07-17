@@ -197,7 +197,13 @@ function InterviewContent() {
         }
         
         // Extract just the question strings from the 2D array
-        const questionStrings = questions.map(question => question[1]);
+        const questionStrings = questions.map(questionArr => questionArr[1]);
+        
+        // Log the data being sent
+        console.log("Submitting data:", {
+            questions: questionStrings,
+            answers: finalAnswers
+        });
         
         // Navigate to Results page with data as URL parameters
         const questionsParam = encodeURIComponent(JSON.stringify(questionStrings));
