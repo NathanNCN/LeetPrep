@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, Suspense } from "react";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-python";
@@ -8,14 +8,25 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from "next/navigation";
 import { FaHome, FaClock, FaMicrophone } from "react-icons/fa";
 
-function InterviewPage() {
+function LoadingFallback() {
+    return (
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#0f0f0f] items-center p-6 font-sans">
+            <div className="w-full max-w-4xl mx-auto mt-10">
+                <div className="text-center my-12">
+                    <div className="text-white text-xl">Loading interview...</div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function InterviewContent() {
     const searchParams = useSearchParams();
     const [code, setCode] = useState<string>("# Write your solution here");
     
     const difficulty = searchParams.get('diff');
     const length = searchParams.get('length');
     const selectedLangs = useMemo(() => searchParams.get('langs')?.split(',') || [], [searchParams]);
-
 
     const [questions, setQuestions] = useState<string[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<number>(0);
@@ -134,11 +145,7 @@ function InterviewPage() {
         return () => clearInterval(interval);
     }, []);
 
-
-
     const router = useRouter()
-
-    
 
     const addAnswer = () => {
         if (codeQuestion) {
@@ -161,11 +168,7 @@ function InterviewPage() {
         }
     }
 
-
-   
-
-   const handleNextQuestion = () => {
-        
+    const handleNextQuestion = () => {
         addAnswer();
 
         const nextQuestionIndex = currentQuestion + 1;
@@ -178,11 +181,9 @@ function InterviewPage() {
         }
         
         setCurrentQuestion(nextQuestionIndex);
-
     }
 
     const handeSubmit = async () =>{
-       
         // Collect the final answer directly instead of using addAnswer()
         const finalAnswers = [...answer];
         
@@ -202,6 +203,7 @@ function InterviewPage() {
         
         router.push(`/Results?questions=${questionsParam}&answers=${answersParam}`);
     }
+
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#0f0f0f] items-center p-6 font-sans">
             <div className="w-full max-w-4xl mx-auto mt-10">
@@ -341,7 +343,13 @@ function InterviewPage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default InterviewPage; 
+export default function InterviewPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <InterviewContent />
+        </Suspense>
+    );
+} 
