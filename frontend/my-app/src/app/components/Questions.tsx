@@ -1,6 +1,6 @@
 'use client';
-import React, { useState, useRef } from 'react';
-import { FaChevronDown, FaChevronUp, FaClock, FaStar, FaExternalLinkAlt } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaChevronDown, FaChevronUp, FaStar, FaExternalLinkAlt } from "react-icons/fa";
 
 interface AccordionProps {
   title: string;
@@ -12,7 +12,6 @@ interface AccordionProps {
 
 function Question(props: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-xl border border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300">

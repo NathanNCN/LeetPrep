@@ -11,7 +11,7 @@ export default function ResultsPage() {
     
     const [questions, setQuestions] = useState<string[]>([]);
     const [answers, setAnswers] = useState<string[]>([]);
-    const [results, setResults] = useState<any>(null);
+    const [results, setResults] = useState<[string, string, string, string, string][] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     
@@ -157,9 +157,9 @@ export default function ResultsPage() {
                                     Performance Summary
                                 </h2>
                                 <div className="grid md:grid-cols-3 gap-8">
-                                    <Rating heading="Overall Rating" rating={results[results.length - 1][0]} />
-                                    <Rating heading="Technical Rating" rating={results[results.length - 1][1]} />
-                                    <Rating heading="Behavioral Rating" rating={results[results.length - 1][2]} />
+                                    <Rating heading="Overall Rating" rating={parseFloat(results[results.length - 1][0])} />
+                                    <Rating heading="Technical Rating" rating={parseFloat(results[results.length - 1][1])} />
+                                    <Rating heading="Behavioral Rating" rating={parseFloat(results[results.length - 1][2])} />
                                 </div>
                             </div>
                         </div>

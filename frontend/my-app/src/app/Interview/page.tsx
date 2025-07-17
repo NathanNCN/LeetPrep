@@ -10,7 +10,7 @@ import { FaHome, FaClock, FaMicrophone } from "react-icons/fa";
 
 function InterviewPage() {
     const searchParams = useSearchParams();
-    const [code, setCode] = useState(`# Write your solution here`);
+    const [code, setCode] = useState<string>("# Write your solution here");
     
     const difficulty = searchParams.get('diff');
     const length = searchParams.get('length');
@@ -28,7 +28,7 @@ function InterviewPage() {
     
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
    
-    const recognitionRef = useRef<any>(null);
+    const recognitionRef = useRef<typeof SpeechRecognition | null>(null);
     
     // Initialize recognition only once
     if (!recognitionRef.current) {
@@ -36,13 +36,13 @@ function InterviewPage() {
         recognitionRef.current.lang = "en-US";
         recognitionRef.current.continuous = true;
         
-        recognitionRef.current.onresult = (event: any) => {
+        recognitionRef.current.onresult = (event: { results: { transcript: string }[][] }) => {
             const result = event.results[0][0].transcript;
             setTranscript(result);
             setIsListening(false);
         };
 
-        recognitionRef.current.onerror = (event: any) => {
+        recognitionRef.current.onerror = (event: { error: string }) => {
             console.error('Speech recognition error:', event.error);
             setIsListening(false);
         };
@@ -56,11 +56,11 @@ function InterviewPage() {
 
     const handleSpeech = () => {
         if (!isListening) {
-            recognitionRef.current.start();
+            recognitionRef.current?.start();
             setIsListening(true);
             setTranscript("");
         } else {
-            recognitionRef.current.stop();
+            recognitionRef.current?.stop();
             setIsListening(false);
         }
     };
@@ -93,7 +93,7 @@ function InterviewPage() {
             }
         };
         fetchQuestions();
-    }, []);
+    }, [difficulty, length, questions.length, selectedLangs]);
     
     // Timer 
     const [time, setTime] = useState("0:00");
@@ -133,7 +133,7 @@ function InterviewPage() {
         
         // Stop any ongoing recognition to ensure clean state
         try {
-            recognitionRef.current.stop();
+            recognitionRef.current?.stop();
         } catch {
             // Recognition might not be running, that's okay
             console.log('Recognition cleanup - no active session to stop');
