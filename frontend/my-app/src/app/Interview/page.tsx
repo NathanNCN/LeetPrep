@@ -26,7 +26,23 @@ function InterviewPage() {
     const [isListening, setIsListening] = useState<boolean>(false);
     const [transcript, setTranscript] = useState<string>("");
     
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    interface ISpeechRecognition {
+        new(): ISpeechRecognition;
+        lang: string;
+        continuous: boolean;
+        onresult: (event: { results: { transcript: string }[][] }) => void;
+        onerror: (event: { error: string }) => void;
+        onend: () => void;
+        start: () => void;
+        stop: () => void;
+    }
+
+    interface IWindow extends Window {
+        SpeechRecognition?: ISpeechRecognition;
+        webkitSpeechRecognition?: ISpeechRecognition;
+    }
+
+    const SpeechRecognition = ((window as IWindow).SpeechRecognition || (window as IWindow).webkitSpeechRecognition)!;
    
     const recognitionRef = useRef<typeof SpeechRecognition | null>(null);
     

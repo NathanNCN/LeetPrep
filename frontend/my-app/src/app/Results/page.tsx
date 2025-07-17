@@ -9,8 +9,6 @@ export default function ResultsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     
-    const [questions, setQuestions] = useState<string[]>([]);
-    const [answers, setAnswers] = useState<string[]>([]);
     const [results, setResults] = useState<[string, string, string, string, string][] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -24,9 +22,6 @@ export default function ResultsPage() {
             try {
                 const decodedQuestions = JSON.parse(decodeURIComponent(questionsParam));
                 const decodedAnswers = JSON.parse(decodeURIComponent(answersParam));
-                
-                setQuestions(decodedQuestions);
-                setAnswers(decodedAnswers);
                 
                 // Call API to get results
                 fetchResults(decodedQuestions, decodedAnswers);

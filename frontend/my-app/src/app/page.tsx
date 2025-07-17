@@ -1,5 +1,4 @@
 import Userinputs from "./components/Userinputs";
-import { useState } from "react";
 import { FaRocket, FaCode, FaBrain } from "react-icons/fa";
 
 export default function Home() {
@@ -16,7 +15,7 @@ export default function Home() {
             <p className="text-gray-200 text-xl md:text-2xl leading-relaxed max-w-4xl mx-auto">
               LeetPrep bridges the gap between you and interviews. LeetPrep is powered by AI, it delivers
               personalized coding, technical, and behavioral questions tailored to your preferred 
-              languages and difficulty level. Whether you're aiming for junior roles or FAANG-level 
+              languages and difficulty level. Whether you&apos;re aiming for junior roles or FAANG-level 
               challenges. After each session, LeetPrep provides smart feedback and targeted resources 
               to help you improve where it matters most.
             </p>

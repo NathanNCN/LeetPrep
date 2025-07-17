@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaPlay, FaTimes, FaCheck } from "react-icons/fa";
+import { FaPlay, FaTimes } from "react-icons/fa";
 
 function Userinputs() {
     const codingLangs = ["Python", "JavaScript", "Java", "C++", "C#", "Go", "Rust", "TypeScript"]
