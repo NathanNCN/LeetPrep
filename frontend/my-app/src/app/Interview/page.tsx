@@ -110,11 +110,12 @@ function InterviewContent() {
                         body: JSON.stringify({length: length, level: difficulty, language: selectedLangs}),
                     }); 
                     const data = await response.json();
+                    console.log("data", data);
 
                     if (data.results) {
                         const parsed = JSON.parse(data.results);
                         setQuestions(parsed);
-                        console.log(parsed);
+                        console.log("parsed Questions", parsed);
                     } else {
                         setError(true);
                     }
