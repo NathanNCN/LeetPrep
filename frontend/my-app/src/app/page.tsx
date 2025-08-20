@@ -1,6 +1,8 @@
 import Userinputs from "./components/Userinputs";
 import { FaRocket, FaCode, FaBrain } from "react-icons/fa";
 
+
+// Home page header
 export default function Home() {
   return (
     <div className="flex flex-col items-center text-center min-h-screen px-8 bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#0f0f0f] font-sans">

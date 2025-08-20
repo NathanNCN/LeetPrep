@@ -4,29 +4,44 @@ import { useRouter } from "next/navigation";
 import { FaPlay, FaTimes } from "react-icons/fa";
 
 function Userinputs() {
+
+    // Array of coding languages allowed
     const codingLangs = ["Python", "JavaScript", "Java", "C++", "C#", "Go", "Rust", "TypeScript"]
     const router = useRouter();
 
+    // State to store the selected languages
     const [langs, setLang] = useState<string[]>([])
+
+    // State to store the selected difficulty and length
     const [checks, setChecks] = useState({"diff": "", "length":""})
 
+    // State to store the open state
     const [open, setOpen] = useState(false)
+
+    // State to store the error state
     const [error, setError] = useState(false)
+
+    // State to store the error message
     const [errorMsg, setErrorMsg] = useState("")
 
+    // Function to remove a language from the selected languages
     const removeLang = (langToRemove: string) => {
         setLang(langs.filter(lang => lang !== langToRemove))
     }
+
+    // Function to add programming language to the selected languages
     const addLang = (name: string) => {
         if (!langs.includes(name)){
             setLang([...langs, name])
         }
     }
 
+    // Function to update the selected difficulty and length
     const updateChecks = (e: React.ChangeEvent<HTMLInputElement>) =>{
         setChecks({...checks, [e.target.name]: e.target.value})
     }
 
+    // Function to handle the submission of the form
     const handleSubmit = async () => {
         if (checks.diff === "" || checks.length === "" || langs.length === 0) {
             setError(true);
@@ -34,6 +49,7 @@ function Userinputs() {
             return;
         }
 
+        // Create a new URLSearchParams object to store the query parameters
         const queryParams = new URLSearchParams({
             diff: checks.diff,
             length: checks.length,

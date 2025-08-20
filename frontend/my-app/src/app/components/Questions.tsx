@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp, FaStar, FaExternalLinkAlt } from "react-icons/fa";
 
+
+// Interface for the accordion props
 interface AccordionProps {
   title: string;
   answer?: string;
@@ -11,20 +13,26 @@ interface AccordionProps {
 }
 
 function Question(props: AccordionProps) {
+
+  // State to show/hide question results
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-xl border border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300">
+      
+      {/* Button to show/hide question results */}
       <button 
         className="w-full flex justify-between items-center p-6 text-left text-white font-semibold focus:outline-none hover:bg-white/5 transition-colors duration-200"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="text-lg">{props.title}</span>
         <div className="text-[#00A8CC] transform transition-transform duration-300">
+          {/* Condtional rendering to show/hide question results */}
           {isOpen ? <FaChevronUp size={20} /> : <FaChevronDown size={20} />}
         </div>
       </button>
       
+      {/* Conditional rendering to show/hide question results */}
       {isOpen && (
         <div className="px-6 pb-6 text-left text-gray-300 space-y-4">
           <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
@@ -34,9 +42,11 @@ function Question(props: AccordionProps) {
               </div>
               Your Answer
             </h4>
+            {/* Condtional rendering to user answer results */}
             <p className="text-gray-300 whitespace-pre-wrap">{props.answer || "No answer provided"}</p>
           </div>
           
+          {/* Condtional rendering to show/hide feedback results */}
           {props.feedback && (
             <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
               <h4 className="text-white font-semibold mb-2">Feedback</h4>
@@ -44,6 +54,7 @@ function Question(props: AccordionProps) {
             </div>
           )}
           
+          {/* Condtional rendering to show/hide score results */}
           <div className="grid md:grid-cols-2 gap-4">
             {props.score !== undefined && (
               <div className="bg-white/5 rounded-lg p-4 border border-gray-600">
@@ -64,6 +75,7 @@ function Question(props: AccordionProps) {
                 </div>
                 Resources
               </h4>
+              {/* Condtional rendering to show/hide resources provided */}
               <a 
                 href={props.resources} 
                 className="text-[#00A8CC] hover:text-[#00C4E0] underline transition-colors duration-200"

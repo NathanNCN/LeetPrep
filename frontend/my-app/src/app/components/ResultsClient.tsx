@@ -5,12 +5,19 @@ import { FaHome, FaTrophy, FaChartBar } from "react-icons/fa";
 import Questions from "./Questions";
 import Rating from "./Rating";
 
+
+// Const for the backend url for production and development
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8081';
 
 export default function ResultsClient() {
+
+    // useRouter to navigate to the home page later
     const router = useRouter();
+
+    // useSearchParams to get the questions and answers from the url
     const searchParams = useSearchParams();
     
+    // State to store the results and errors
     const [results, setResults] = useState<[string, string, string, string, string][] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -20,36 +27,44 @@ export default function ResultsClient() {
         const questionsParam = searchParams.get('questions');
         const answersParam = searchParams.get('answers');
         
+        // check to see if there are questions and answers in the url params tod decode them
         if (questionsParam && answersParam) {
+
+            // try to decode the questions and answers
             try {
+
+                // decode the questions and answers, then turn them into json objects
                 const decodedQuestions = JSON.parse(decodeURIComponent(questionsParam));
                 const decodedAnswers = JSON.parse(decodeURIComponent(answersParam));
                 
-                // Validate the data
+                // Check to see if the decoded questions and answers are arrays
                 if (!Array.isArray(decodedQuestions) || !Array.isArray(decodedAnswers)) {
                     throw new Error('Invalid data format');
                 }
 
-                // Log the decoded data
-                console.log("Decoded data:", {
-                    questions: decodedQuestions,
-                    answers: decodedAnswers
-                });
+    
                 
-                // Call API to get results
+                // Call API to get results based on the decoded questions and answers
                 fetchResults(decodedQuestions, decodedAnswers);
+            
+            // if there is an error, set the error state to true and set the loading state to falsed
             } catch (err) {
                 console.error('Error parsing URL parameters:', err);
                 setError(true);
                 setLoading(false);
             }
+        // if there are no questions and answers, set the error state to true and set the loading state to false
         } else {
             setError(true);
             setLoading(false);
         }
     }, [searchParams]);
     
+
+    // Function to analyze the questions and answers
     const fetchResults = async (questions: string[], answers: string[]) => {
+
+        // try to fetch the results
         try {
             const requestBody = { questions, answers };
             console.log('Request body:', requestBody);
@@ -85,34 +100,17 @@ export default function ResultsClient() {
                     // Remove actual control characters (not escaped ones)
                     cleanedResponse = cleanedResponse.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
                     
-                    console.log('Cleaned response:', cleanedResponse);
                     
                     // Try to parse the cleaned response
                     const parsed = JSON.parse(cleanedResponse);
                     setResults(parsed);
+                // if there is an error, set the error state to true and set the loading state to false
                 } catch (parseError) {
                     console.error('JSON parsing error:', parseError);
                     console.error('Problematic JSON string around position 262:');
                     console.error('Context:', data.results.substring(240, 300));
                     
-                    // Try alternative parsing approach - be more aggressive with cleaning
-                    try {
-                        const aggressiveClean = data.results
-                            .replace(/^```json\n?/, '').replace(/\n?```$/, '') // Remove code blocks
-                            .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ') // Replace control chars with spaces
-                            .replace(/\s+/g, ' ') // Normalize whitespace
-                            .replace(/,\s*}/g, '}') // Remove trailing commas
-                            .replace(/,\s*]/g, ']') // Remove trailing commas in arrays
-                            .trim();
-                        
-                        console.log('Aggressively cleaned response:', aggressiveClean);
-                        const parsed = JSON.parse(aggressiveClean);
-                        setResults(parsed);
-                    } catch (secondParseError) {
-                        console.error('Second parsing attempt failed:', secondParseError);
-                        console.error('Final cleaned string:', data.results.replace(/[\u0000-\u001F\u007F-\u009F]/g, '•'));
-                        setError(true);
-                    }
+        
                 }
             } else {
                 setError(true);
@@ -125,6 +123,7 @@ export default function ResultsClient() {
         }
     };
     
+    // Function to navigate to the home page
     const home = () => {
         router.push("/");
     }

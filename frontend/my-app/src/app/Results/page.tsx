@@ -15,6 +15,7 @@ function LoadingFallback() {
 
 export default function ResultsPage() {
     return (
+        // Suspense to handle the loading state if the results are not ready yet
         <Suspense fallback={<LoadingFallback />}>
             <ResultsClient />
         </Suspense>

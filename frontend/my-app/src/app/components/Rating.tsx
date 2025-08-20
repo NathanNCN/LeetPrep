@@ -3,16 +3,22 @@
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 
+
+// Interface for the rating props
 interface RatingProps {
     heading: string;
     rating: number;
 }
 
 export default function Rating(props: RatingProps) {
+
+    // State to store the color of the rating
     const [ratingColor, setRatingColor] = useState("text-red-400");
     const [bgColor, setBgColor] = useState("bg-red-500/20");
     const [borderColor, setBorderColor] = useState("border-red-500/50");
     
+
+    // UseEffect to set the colour of the perfomrance based on overall ratting
     useEffect(() => {
         if (props.rating >= 8) {
             setRatingColor("text-green-400");
@@ -29,6 +35,7 @@ export default function Rating(props: RatingProps) {
         }
     }, [props.rating]);
     
+    // Now based on state we can render the rating componenet with the correct color
     return (
         <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-gray-700 hover:shadow-lg transition-all duration-300">
             <h3 className="text-white text-xl font-bold mb-4 text-center">{props.heading}</h3>
@@ -43,6 +50,7 @@ export default function Rating(props: RatingProps) {
                     </div>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-2">
+                    
                     <div 
                         className={`h-2 rounded-full transition-all duration-1000 ${
                             props.rating >= 8 ? 'bg-green-400' : 
